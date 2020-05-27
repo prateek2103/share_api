@@ -3,6 +3,7 @@ const app=express()
 const employeeModel=require("../models/model")["employee"]
 const companyModel=require("../models/model")['company']
 const projectModel=require('../models/model')['project']
+const mailsender=require("../utils/mail")
 
 //add a new user or employee
 app.post("/createEmployee",(req,res)=>{
@@ -76,14 +77,14 @@ app.post("/shareProject/:projectId/:empId",(req,res)=>{
             data.forEach(emp=>{
                 //checking if both works in the same company
                 if(emp.company.toString()==creator_company)
-                    validEmails.push({"user":emp._id,
+                    validEmails.push({"email":emp.email,"user":emp._id,
                         "access":emails.filter(ele=>ele.user==emp.email).map(ele=>ele.access)[0]
                     })
             })
         }
     }).then(function(){
             console.log(validEmails)
-
+            mailsender("prateek007.purohit@gmail.com","anotfytgsjtcmhmk",validEmails.map(ele=>ele.email),"project link")
             //updating the users of the project
             projectModel.findByIdAndUpdate(req.params.projectId,
                                 {$push:{users:{$each:validEmails}}},function(err){
