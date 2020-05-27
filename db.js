@@ -2,7 +2,7 @@ const mongoose=require('mongoose')
 const url="mongodb://localhost/share"
 
 function db(){
-    mongoose.connect(url,(err)=>{
+    mongoose.connect(url,{ useNewUrlParser: true, useUnifiedTopology: true,useFindAndModify:false }, (err)=>{
     if(err)
         console.log(err)
     else

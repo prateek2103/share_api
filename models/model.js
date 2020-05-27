@@ -1,37 +1,8 @@
 const mongoose=require('mongoose')
 const Schema=mongoose.Schema
 
-//registration model
-const userSchema=new Schema({
-    name:{
-        type:String,
-        required:true
-    },
-    email:{
-        type:String,
-        required:true
-    },
-    company:{
-        type:String,
-        required:true
-    },
-    phone:{
-        type:Number,
-        required:true
-    },
-    password:{
-        type:String,
-        required:true
-    },
-    employeeId:{
-        type:Schema.Types.ObjectId,
-        ref:"Employee"
-    }
-})
-
 //company model
 const companySchema=new Schema({
-    _id:Schema.Types.ObjectId,
     name:{
         type:String,
         unique:true,
@@ -46,13 +17,8 @@ const companySchema=new Schema({
 
 //employee model
 const employeeSchema=new Schema({
-    _id:Schema.Types.ObjectId,
     name:{
         type:String,
-        required:true
-    },
-    dob:{
-        type:Date,
         required:true
     },
     company:{
@@ -63,6 +29,15 @@ const employeeSchema=new Schema({
         type:Number,
         required:true
     },
+    password:{
+        type:String,
+        required:true
+    },
+    email:{
+        type:String,
+        required:true,
+        unique:true
+    },
     projects:[{
         type:Schema.Types.ObjectId,
         ref:"Project"
@@ -71,7 +46,6 @@ const employeeSchema=new Schema({
 
 //project model
 const projectSchema=new Schema({
-    _id:Schema.Types.ObjectId,
     name:{
         type:String,
         required:true
@@ -80,15 +54,15 @@ const projectSchema=new Schema({
         type:String,
         required:true
     },
+    creator:{type:Schema.Types.ObjectId,ref:"Employee"},
     users:[{
-        user:{type:Schema.Types.ObjectId,ref:"Employee"},
-        access:{type:Array,default:[]}
+        user:{type:Schema.Types.ObjectId,ref:"Employee",unique:true},
+        access:{type:Array,default:['read','write','update','delete']},
     }]
 })
 
 const Company=mongoose.model("Company",companySchema,"Company")
 const Employee=mongoose.model("Employee",employeeSchema,"Employee")
 const Project=mongoose.model("Project",projectSchema,"Project")
-const User=mongoose.model("User",userSchema,"User")
 
-module.exports={"company":Company,"employee":Employee,"project":Project,"user":User}
+module.exports={"company":Company,"employee":Employee,"project":Project}
