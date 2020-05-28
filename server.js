@@ -8,11 +8,12 @@ const shareRoutes=require("./routes/share")
 const express=require('express')
 const app=express()
 const bodyParser=require('body-parser')
+const userRoutes=require("./routes/user")
 
 db()
 app.use(bodyParser.json())
 app.use("/api",shareRoutes)
-
+app.use('/user',userRoutes)
 
 // let company=new companyModel({
 //     _id:mongoose.Types.ObjectId(),
